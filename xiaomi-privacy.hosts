@@ -1,0 +1,206 @@
+# ==============================================================================
+#  Xiaomi / MIUI / HyperOS 数据采集域名屏蔽表（hosts 格式）
+#  生成日期：2026-11-05
+#  配套说明：README-xiaomi-privacy.md
+#  参考风格：anti-AD / LoopDns-Fuck-you-MIUI / unknownFalleN-xiaomi-dns-blocklist
+# ==============================================================================
+#
+#  使用方法：
+#    - Android 免 Root：AdGuard、PersonalDNSfilter、RethinkDNS、AdAway(需root) 等
+#      支持自定义 hosts / 规则源的 App，直接订阅或粘贴本文件。
+#    - 路由器：AdGuard Home / Pi-hole / OpenWrt dnsmasq(附加 hosts) / dnsmasq-china-list
+#    - 私人 DNS：需托管到支持自定义 denylist 的服务（NextDNS、RethinkDNS 自定义槽位），
+#      公共 DoT 地址无法导入本表。
+#
+#  重要提示：
+#    1. 本表按「采什么」分组，而不是按「传到哪」分组。同一条数据可能被打到多个域名。
+#    2. 第 1 组会真实挡住「应用清单外传」，但会导致第三方 APK 云校验失败、
+#       安装被拦或反复提示风险。若你只想降噪而不影响使用，请只启用第 5-8 组。
+#    3. 第 9 组是共用域名 / 运营商域名，默认全部注释，启用前务必读说明文件。
+#    4. 域名会随版本新增，请定期与上游列表比对。
+#
+# ==============================================================================
+
+
+# ------------------------------------------------------------------------------
+#  第 1 组：应用清单 / 反诈引擎上报  （核心，直接采集「装了什么 App」）
+#  证据等级 A —— 抓包 + 逆向 + 官方开发人员确认
+# ------------------------------------------------------------------------------
+0.0.0.0 flash.sec.miui.com
+0.0.0.0 flash.sec.intl.miui.com
+0.0.0.0 fraud-detection.engine.miui.com
+
+
+# ------------------------------------------------------------------------------
+#  第 2 组：应用包管理组件（安装/更新时的包信息上报与校验）
+#  证据等级 A —— 2022-01 抓包，含包名/签名/MD5/机型/屏幕/来源App
+# ------------------------------------------------------------------------------
+0.0.0.0 api.installer.xiaomi.com
+0.0.0.0 preview-api.installer.xiaomi.com
+
+
+# ------------------------------------------------------------------------------
+#  第 3 组：云查杀引擎（腾讯安天 AVL / 腾讯引擎）
+#  上报已安装应用与扫描结果，回传查杀结论；负责病毒库与规则下发
+#  证据等级 A/B
+# ------------------------------------------------------------------------------
+0.0.0.0 miav-cse.avlyun.com
+0.0.0.0 miui-fxcse.avlyun.com
+0.0.0.0 ixav-cse.avlyun.com
+0.0.0.0 sdkconf.avlyun.com
+0.0.0.0 update.avlyun.sec.miui.com
+0.0.0.0 logupdate.avlyun.sec.miui.com
+0.0.0.0 log.avlyun.sec.intl.miui.com
+0.0.0.0 virus-engine.sec.intl.miui.com
+0.0.0.0 tmfsdk.m.qq.com
+0.0.0.0 etl-xlmc-ssl.sandai.net
+
+
+# ------------------------------------------------------------------------------
+#  第 4 组：安全中心 / 安全组件其它接口（sec.miui.com 系）
+#  混装用途：安全校验、白名单下发、设备与行为埋点、广告归因
+#  证据等级 B —— 见于多个社区维护列表，未逐条抓包定性
+# ------------------------------------------------------------------------------
+0.0.0.0 api.sec.miui.com
+0.0.0.0 data.sec.miui.com
+0.0.0.0 adv.sec.miui.com
+0.0.0.0 adv.sec.intl.miui.com
+0.0.0.0 mazu.sec.miui.com
+0.0.0.0 xlmc.sec.miui.com
+0.0.0.0 etl.xlmc.sec.miui.com
+0.0.0.0 auth.be.sec.miui.com
+0.0.0.0 authbe.sec.intl.miui.com
+0.0.0.0 api.tw06.xlmc.sec.miui.com
+0.0.0.0 adinfo.ra1.xlmc.sec.miui.com
+0.0.0.0 r.sg.sec.miui.com
+0.0.0.0 api.miui.security.xiaomi.com
+
+
+# ------------------------------------------------------------------------------
+#  第 5 组：设备指纹 / 使用统计 / 行为埋点（mistat、tracking、sys 系）
+#  证据等级 A/B —— 长期跑量，采集设备标识、机型、使用时长、应用调用
+# ------------------------------------------------------------------------------
+0.0.0.0 data.mistat.xiaomi.com
+0.0.0.0 data.mistat.intl.xiaomi.com
+0.0.0.0 abtest.mistat.xiaomi.com
+0.0.0.0 storeconfig.mistat.intl.xiaomi.com
+0.0.0.0 tracking.miui.com
+0.0.0.0 tracking.intl.miui.com
+0.0.0.0 fcanr.tracking.miui.com
+0.0.0.0 a0.app.xiaomi.com
+0.0.0.0 metok.sys.miui.com
+0.0.0.0 geofence.sys.miui.com
+0.0.0.0 cc.sys.miui.com
+0.0.0.0 ccc.sys.miui.com
+0.0.0.0 cc.sys.intl.xiaomi.com
+0.0.0.0 ccc.sys.intl.xiaomi.com
+0.0.0.0 privacy.api.intl.miui.com
+0.0.0.0 mcc-intl.inf.miui.com
+0.0.0.0 api.collect.data.intl.miui.com
+0.0.0.0 api.device.xiaomi.net
+0.0.0.0 userid.xiaomi.com
+0.0.0.0 idm.api.io.mi.com
+0.0.0.0 api.io.mi.com
+0.0.0.0 stat.xiaomi.com
+0.0.0.0 a.stat.xiaomi.com
+0.0.0.0 api.d.xiaomi.com
+0.0.0.0 d.xiaomi.com
+
+
+# ------------------------------------------------------------------------------
+#  第 6 组：广告归因 / 广告埋点（ADUI 体系）
+#  采集：设备标识、曝光/点击/安装转化，可与前几组数据做身份串联
+#  证据等级 A/B
+# ------------------------------------------------------------------------------
+0.0.0.0 ad.xiaomi.com
+0.0.0.0 ad.mi.com
+0.0.0.0 ad.intl.xiaomi.com
+0.0.0.0 api.ad.xiaomi.com
+0.0.0.0 api.ad.intl.xiaomi.com
+0.0.0.0 e.ad.xiaomi.com
+0.0.0.0 cdn.ad.xiaomi.com
+0.0.0.0 globalapi.ad.xiaomi.com
+0.0.0.0 new.api.ad.xiaomi.com
+0.0.0.0 ssp.ad.xiaomi.com
+0.0.0.0 ssp.xiaomi.com
+0.0.0.0 zeus.ad.xiaomi.com
+0.0.0.0 zeus.ad.intl.xiaomi.com
+0.0.0.0 sdkconfig.ad.xiaomi.com
+0.0.0.0 sdkconfig.ad.intl.xiaomi.com
+0.0.0.0 diagnosis.ad.xiaomi.com
+0.0.0.0 diagnosis.ad.intl.xiaomi.com
+0.0.0.0 log.ad.xiaomi.com
+0.0.0.0 m.track.ad.xiaomi.com
+0.0.0.0 t.track.ad.xiaomi.com
+0.0.0.0 track.ad.xiaomi.com
+0.0.0.0 clock.ad.xiaomi.com
+
+
+# ------------------------------------------------------------------------------
+#  第 7 组：小米浏览器（网址检测 / 云端黑名单 / HttpDNS）
+#  采集：访问 URL、搜索词、设备与网络环境；会下发网址黑名单
+#  证据等级 A/B
+# ------------------------------------------------------------------------------
+0.0.0.0 api.browser.miui.com
+0.0.0.0 security.browser.miui.com
+0.0.0.0 httpdns.browser.miui.com
+0.0.0.0 r.browser.miui.com
+0.0.0.0 nav.browser.miui.com
+0.0.0.0 hd.browser.miui.com
+0.0.0.0 activity.browser.intl.miui.com
+
+
+# ------------------------------------------------------------------------------
+#  第 8 组：账号 / 推送 / 云服务（携带设备标识、手机号、通讯录类数据）
+#  这一组是「服务可用性」相关，封了会掉推送、掉同步、掉云服务
+#  证据等级 B
+# ------------------------------------------------------------------------------
+0.0.0.0 register.xmpush.xiaomi.com
+0.0.0.0 api.xmpush.xiaomi.com
+0.0.0.0 file.xmpush.xiaomi.com
+0.0.0.0 sandbox.xmpush.xiaomi.com
+0.0.0.0 resolver.msg.xiaomi.net
+0.0.0.0 solve.msg.xiaomi.net
+0.0.0.0 api.account.xiaomi.com
+0.0.0.0 ruac.account.xiaomi.com
+0.0.0.0 api.micloud.xiaomi.net
+0.0.0.0 pdc.micloud.xiaomi.net
+0.0.0.0 find.api.micloud.xiaomi.net
+0.0.0.0 contactapi.micloud.xiaomi.net
+0.0.0.0 phonecallapi.micloud.xiaomi.net
+0.0.0.0 sfsapi.micloud.xiaomi.net
+0.0.0.0 statusapi.micloud.xiaomi.net
+0.0.0.0 cn.app.chat.xiaomi.net
+0.0.0.0 app.chat.xiaomi.net
+0.0.0.0 api.chat.xiaomi.net
+
+
+# ------------------------------------------------------------------------------
+#  第 9 组：共用域名 / 运营商域名 —— 默认关闭，请先阅读说明书
+# ------------------------------------------------------------------------------
+#
+#  SystemHelper 会把「过去 24 小时有使用记录的应用 + 已安装应用 +
+#  使用统计 + 流量」连同 IMEI / IMSI / ICCID 字段发往联通侧接口
+#  dm.wo.com.cn:18080/register（非标端口）。
+#  该主机名与联通自有业务共用，封域名可能影响运营商相关服务；
+#  更安全的做法是用支持「单应用出网管控」的工具只禁 com.mobiletools.systemhelper。
+#
+#0.0.0.0 dm.wo.com.cn
+#
+#  MIUI 相册/主题/商店的静态资源 CDN，会附带设备标识做内容分发统计，
+#  封除后图片、主题、壁纸类功能会异常
+#
+#0.0.0.0 ssl-cdn.static.browser.mi-img.com
+#0.0.0.0 sec-cdn.static.xiaomi.net
+#
+#  小米金融/钱包类接口，同时承担埋点
+#
+#0.0.0.0 api.jr.mi.com
+
+
+# ==============================================================================
+#  上游列表来源（建议订阅，用于覆盖新增域名）
+#    https://github.com/LoopDns/Fuck-you-MIUI            （MIUI 云扫描/隐私，社区整理）
+#    https://github.com/unknownFalleN/xiaomi-dns-blocklist（小米遥测与广告，持续维护）
+#    https://github.com/ACL4SSR/ACL4SSR                   （MIUIPrivacy.list 分片）
+# ==============================================================================
