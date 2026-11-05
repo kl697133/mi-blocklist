@@ -1,0 +1,100 @@
+flash.sec.miui.com
+flash.sec.intl.miui.com
+fraud-detection.engine.miui.com
+api.installer.xiaomi.com
+preview-api.installer.xiaomi.com
+miav-cse.avlyun.com
+miui-fxcse.avlyun.com
+ixav-cse.avlyun.com
+sdkconf.avlyun.com
+update.avlyun.sec.miui.com
+logupdate.avlyun.sec.miui.com
+log.avlyun.sec.intl.miui.com
+virus-engine.sec.intl.miui.com
+tmfsdk.m.qq.com
+etl-xlmc-ssl.sandai.net
+api.sec.miui.com
+data.sec.miui.com
+adv.sec.miui.com
+adv.sec.intl.miui.com
+mazu.sec.miui.com
+xlmc.sec.miui.com
+etl.xlmc.sec.miui.com
+auth.be.sec.miui.com
+authbe.sec.intl.miui.com
+api.tw06.xlmc.sec.miui.com
+adinfo.ra1.xlmc.sec.miui.com
+r.sg.sec.miui.com
+api.miui.security.xiaomi.com
+data.mistat.xiaomi.com
+data.mistat.intl.xiaomi.com
+abtest.mistat.xiaomi.com
+storeconfig.mistat.intl.xiaomi.com
+tracking.miui.com
+tracking.intl.miui.com
+fcanr.tracking.miui.com
+a0.app.xiaomi.com
+metok.sys.miui.com
+geofence.sys.miui.com
+cc.sys.miui.com
+ccc.sys.miui.com
+cc.sys.intl.xiaomi.com
+ccc.sys.intl.xiaomi.com
+privacy.api.intl.miui.com
+mcc-intl.inf.miui.com
+api.collect.data.intl.miui.com
+api.device.xiaomi.net
+userid.xiaomi.com
+idm.api.io.mi.com
+# api.io.mi.com
+stat.xiaomi.com
+a.stat.xiaomi.com
+api.d.xiaomi.com
+d.xiaomi.com
+ad.xiaomi.com
+ad.mi.com
+ad.intl.xiaomi.com
+api.ad.xiaomi.com
+api.ad.intl.xiaomi.com
+e.ad.xiaomi.com
+cdn.ad.xiaomi.com
+globalapi.ad.xiaomi.com
+new.api.ad.xiaomi.com
+ssp.ad.xiaomi.com
+ssp.xiaomi.com
+zeus.ad.xiaomi.com
+zeus.ad.intl.xiaomi.com
+sdkconfig.ad.xiaomi.com
+sdkconfig.ad.intl.xiaomi.com
+diagnosis.ad.xiaomi.com
+diagnosis.ad.intl.xiaomi.com
+log.ad.xiaomi.com
+m.track.ad.xiaomi.com
+t.track.ad.xiaomi.com
+track.ad.xiaomi.com
+clock.ad.xiaomi.com
+api.browser.miui.com
+security.browser.miui.com
+httpdns.browser.miui.com
+r.browser.miui.com
+nav.browser.miui.com
+hd.browser.miui.com
+activity.browser.intl.miui.com
+# register.xmpush.xiaomi.com
+# api.xmpush.xiaomi.com
+# file.xmpush.xiaomi.com
+# sandbox.xmpush.xiaomi.com
+# resolver.msg.xiaomi.net
+# solve.msg.xiaomi.net
+# api.account.xiaomi.com
+# ruac.account.xiaomi.com
+# api.micloud.xiaomi.net
+# pdc.micloud.xiaomi.net
+# find.api.micloud.xiaomi.net
+# contactapi.micloud.xiaomi.net
+# phonecallapi.micloud.xiaomi.net
+# sfsapi.micloud.xiaomi.net
+# statusapi.micloud.xiaomi.net
+# cn.app.chat.xiaomi.net
+# app.chat.xiaomi.net
+# api.chat.xiaomi.net

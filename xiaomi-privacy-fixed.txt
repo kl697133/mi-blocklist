@@ -1,0 +1,258 @@
+[Adblock Plus 2.0]
+! ==============================================================================
+!  Xiaomi / MIUI / HyperOS 数据采集域名屏蔽规则 —— 修订版
+!  基于 xiaomi-privacy.txt (2026-11-05) 审阅修正，原规则域名一条未删
+!  格式：Adblock Plus 2.0 / AdGuard DNS 语法
+!  适用：AdGuard Home、AdGuard DNS、AdGuard for Android、AdGuard App 用户规则
+!  ✗ 不适用：Surge / Clash / Quantumult（它们用 DOMAIN-SUFFIX 语法，会整份忽略）
+!
+!  【本次修正】
+!   1. 补 [Adblock Plus 2.0] 头，明确语法归属，去掉「Surge 通用」的错误表述
+!   2. 第 9 组默认关闭项由 "!!||" 改为 "! ||"（原写法删一个 ! 仍是注释，永远启不来）
+!   3. 第 4 组注释与实现对齐：原注释称"用通配全封 sec.miui.com"，实际并无该规则
+!   4. 更正归属：avlyun.com = 武汉安天 AVL；tmfsdk.m.qq.com = 腾讯天御（两家，非一家）
+!      etl-xlmc-ssl.sandai.net = 迅雷域名，归入 CDN/下载组而非云查杀组
+!   5. api.sec.miui.com 改为默认关闭（公开 hosts 项目亦默认注释：影响流量矫正/白名单）
+!   6. 核心规则加 $important，避免被其他订阅里的 @@ 白名单放行
+!   7. 新增第 10 组（默认关闭）：HTTPDNS / DoH 绕过防护
+!   8. 补齐各组屏蔽后的功能损失说明
+!   9. 第 8 组整体用 # 关闭拦截：查找设备 / MiPush 推送 / 账号 / 云服务依赖链
+!
+!  【部署前提 —— 比规则本身更重要】
+!   * 手机若开启「私人 DNS」指向第三方 DoT/DoH，路由器上的 AdGuard Home 收不到
+!     任何查询，整份规则失效。需在网关强制重定向 53/853，或改用按应用防火墙。
+!   * 组件可能使用内置 HTTPDNS 或硬编码 IP 直连，DNS 层拦不到。要彻底阻断请用
+!     RethinkDNS / AFWall+ 等按应用出网管控，只禁 com.miui.guardprovider、
+!     com.miui.securitycenter、com.mobiletools.systemhelper。
+!   * 配套 hosts 版请同时写 IPv6 条目（:: 或 ::1），否则 AAAA 记录可绕过。
+!   * 逐组启用、观察 24h 再启用下一组；域名随系统版本变化，需订阅维护。
+!  用途：个人自有设备的隐私管理与流量审计。不提供针对反诈平台服务端的规避规则。
+! ==============================================================================
+
+! ------------------------------------------------------------------------------
+!  第 1 组：应用清单 / 反诈引擎上报（核心）
+!  采集内容：已安装第三方应用清单、包名、版本、签名摘要、应用名、扫描结果
+!  ⚠ 副作用：fraud-detection.engine.miui.com 同时下发 NFC 支付/公交卡应用白名单，
+!    屏蔽后可能影响银联卡、公交卡、支付类 NFC 读取（2026-10 逆向实证）
+!  ⚠ 副作用：诈骗电话/短信预警、云端安全配置一并失效
+!  证据：抓包 + 逆向；「MIUI EU 首席开发者公开确认」建议补原始链接以便复核
+! ------------------------------------------------------------------------------
+||flash.sec.miui.com^$important
+||flash.sec.intl.miui.com^$important
+||fraud-detection.engine.miui.com^$important
+
+! ------------------------------------------------------------------------------
+!  第 2 组：应用包管理组件（安装/更新时上报包信息）
+!  采集内容：包名、APK 签名、MD5、版本号、CPU 架构、机型、屏幕分辨率、
+!            安装来源 App、client_uuid，疑似含经纬度
+!  ⚠ 副作用：APK 安装校验、病毒云扫描失效；部分应用商店/浏览器下载 APK 异常
+!  证据：2022-01 V2EX 抓包截图（建议补帖子 URL）
+!  提示：按后缀整体匹配应写 ||installer.xiaomi.com^，当前只覆盖两个已知子域
+! ------------------------------------------------------------------------------
+||api.installer.xiaomi.com^$important
+||preview-api.installer.xiaomi.com^$important
+
+! ------------------------------------------------------------------------------
+!  第 3 组：云查杀引擎 —— 安天 AVL + 腾讯天御（两套不同厂商的 SDK）
+!  采集内容：已安装应用列表、APK 特征、扫描结果；下发病毒库与规则
+!  ⚠ avlyun.com 属武汉安天（Antiy/AVL 反病毒引擎），被 QQ、华为、vivo 等多家共用。
+!    整主域封禁会连带影响其他 App 的病毒扫描，与第 9 组「共用域名默认关闭」原则冲突。
+!    追求最小影响可改用以下 4 个小米专用端点替换 ||avlyun.com^：
+!      ||miav-cse.avlyun.com^  ||miui-fxcse.avlyun.com^
+!      ||ixav-cse.avlyun.com^  ||sdkconf.avlyun.com^
+!  ⚠ update/logupdate/log.* 三条是 sec.miui.com 的子域，不受 ||avlyun.com^ 覆盖，需保留
+! ------------------------------------------------------------------------------
+||avlyun.com^
+||update.avlyun.sec.miui.com^
+||logupdate.avlyun.sec.miui.com^
+||log.avlyun.sec.intl.miui.com^
+||virus-engine.sec.intl.miui.com^
+||tmfsdk.m.qq.com^
+
+! ------------------------------------------------------------------------------
+!  第 4 组：安全中心其它接口（sec.miui.com 系）
+!  混装：安全校验、白名单下发、设备与行为埋点、广告归因
+!  【修正】原注释称「本组用通配会把 sec.miui.com 全封」，但组内并无 ||sec.miui.com^，
+!    实际是逐子域精确列举，对新增子域没有抵抗力。若要贯彻「后缀整体匹配」的宣称，
+!    应改为 ||sec.miui.com^ 一条（并删掉下面 12 条冗余子域）；当前保持精确列举，
+!    请知悉：新增接口不会被自动覆盖。
+!  【冗余提示】||xlmc.sec.miui.com^ 已覆盖下面 etl./api.tw06./adinfo.ra1. 三条
+!  ⚠ api.sec.miui.com 默认关闭：还承担流量矫正、号码识别白名单下载、云设置同步
+! ------------------------------------------------------------------------------
+! ||api.sec.miui.com^
+||data.sec.miui.com^
+||adv.sec.miui.com^
+||adv.sec.intl.miui.com^
+||mazu.sec.miui.com^
+||xlmc.sec.miui.com^
+||etl.xlmc.sec.miui.com^
+||auth.be.sec.miui.com^
+||authbe.sec.intl.miui.com^
+||api.tw06.xlmc.sec.miui.com^
+||adinfo.ra1.xlmc.sec.miui.com^
+||r.sg.sec.miui.com^
+||api.miui.security.xiaomi.com^
+
+! ------------------------------------------------------------------------------
+!  第 5 组：设备指纹 / 使用统计 / 行为埋点
+!  采集内容：设备唯一标识、机型、系统版本、使用时长、功能调用频次、定位
+!  ⚠ idm.api.io.mi.com 屏蔽后可能导致小米浏览器无法下载 APK
+!  【冗余提示】||stat.xiaomi.com^ 已覆盖 ||a.stat.xiaomi.com^
+! ------------------------------------------------------------------------------
+||data.mistat.xiaomi.com^
+||data.mistat.intl.xiaomi.com^
+||abtest.mistat.xiaomi.com^
+||storeconfig.mistat.intl.xiaomi.com^
+||tracking.miui.com^
+||tracking.intl.miui.com^
+||fcanr.tracking.miui.com^
+||a0.app.xiaomi.com^
+||metok.sys.miui.com^
+||geofence.sys.miui.com^
+||cc.sys.miui.com^
+||ccc.sys.miui.com^
+||cc.sys.intl.xiaomi.com^
+||ccc.sys.intl.xiaomi.com^
+||privacy.api.intl.miui.com^
+||mcc-intl.inf.miui.com^
+||api.collect.data.intl.miui.com^
+||api.device.xiaomi.net^
+||userid.xiaomi.com^
+||idm.api.io.mi.com^
+||stat.xiaomi.com^
+||a.stat.xiaomi.com^
+||api.d.xiaomi.com^
+
+! ------------------------------------------------------------------------------
+!  第 6 组：广告归因 / 广告埋点
+!  采集内容：设备标识、曝光/点击/安装转化、行为画像
+!  【冗余提示】||ad.xiaomi.com^ 已覆盖本组 15 条 *.ad.xiaomi.com 子域；
+!    ||ad.intl.xiaomi.com^ 已覆盖 4 条 *.ad.intl.xiaomi.com 子域。
+!    保留原样不影响效果，但维护时改主域即可，不必逐条改。
+! ------------------------------------------------------------------------------
+||ad.xiaomi.com^
+||ad.mi.com^
+||ad.intl.xiaomi.com^
+||api.ad.xiaomi.com^
+||api.ad.intl.xiaomi.com^
+||e.ad.xiaomi.com^
+||cdn.ad.xiaomi.com^
+||globalapi.ad.xiaomi.com^
+||new.api.ad.xiaomi.com^
+||ssp.ad.xiaomi.com^
+||ssp.xiaomi.com^
+||zeus.ad.xiaomi.com^
+||zeus.ad.intl.xiaomi.com^
+||sdkconfig.ad.xiaomi.com^
+||sdkconfig.ad.intl.xiaomi.com^
+||diagnosis.ad.xiaomi.com^
+||diagnosis.ad.intl.xiaomi.com^
+||log.ad.xiaomi.com^
+||m.track.ad.xiaomi.com^
+||t.track.ad.xiaomi.com^
+||track.ad.xiaomi.com^
+||clock.ad.xiaomi.com^
+
+! ------------------------------------------------------------------------------
+!  第 7 组：小米浏览器（网址检测 / 云端黑名单 / HttpDNS）
+!  采集内容：访问 URL、搜索词、网络环境；会下发网址黑名单
+!  ⚠ nav./r./hd. 三条封后会影响浏览器导航页、活动页、首页内容
+!  ⚠ httpdns.browser.miui.com 只是厂商自有 HTTPDNS，远不足以堵住绕过（见第 10 组）
+! ------------------------------------------------------------------------------
+||api.browser.miui.com^
+||security.browser.miui.com^
+||httpdns.browser.miui.com^
+||r.browser.miui.com^
+||nav.browser.miui.com^
+||hd.browser.miui.com^
+||activity.browser.intl.miui.com^
+
+! ------------------------------------------------------------------------------
+!  第 8 组：账号 / 推送 / 云服务 —— 【已整体关闭拦截，规则行首加 #】
+!  ⚠ 原因：这一组是「设备丢失后能否找回」的完整依赖链，缺一不可：
+!     小米账号登录 → 小米云服务 / 查找设备 API → MiPush 长连接下发
+!     「定位 / 发声 / 丢失模式 / 清除数据」指令 → 设备上报位置。
+!     任一环被 DNS 拦截，设备都可能显示离线、远程指令收不到。
+!  ⚠ 核实依据：MiPushFramework 明确要求 resolver.msg.xiaomi.net 与
+!     cn.app.chat.xiaomi.net 不得屏蔽；AdRules 项目确认前者是 MiPush 服务器发现 /
+!     故障转移节点；小米官方文档确认查找设备需登录账号且设备联网。
+!  ⚠ 若确认不需要查找设备、只想挡通讯录/通话同步，可单独启用下面 3 条
+!     （删掉行首 "# " 即可）：
+!       contactapi.micloud.xiaomi.net / phonecallapi.micloud.xiaomi.net /
+!       sfsapi.micloud.xiaomi.net
+!  ⚠ AdGuard DNS 语法中 # 开头即注释，被忽略；不影响本文件其余规则。
+! ------------------------------------------------------------------------------
+# ||register.xmpush.xiaomi.com^
+# ||api.xmpush.xiaomi.com^
+# ||file.xmpush.xiaomi.com^
+# ||sandbox.xmpush.xiaomi.com^
+# ||resolver.msg.xiaomi.net^
+# ||solve.msg.xiaomi.net^
+# ||api.account.xiaomi.com^
+# ||ruac.account.xiaomi.com^
+# ||api.micloud.xiaomi.net^
+# ||pdc.micloud.xiaomi.net^
+# ||find.api.micloud.xiaomi.net^
+# ||contactapi.micloud.xiaomi.net^
+# ||phonecallapi.micloud.xiaomi.net^
+# ||sfsapi.micloud.xiaomi.net^
+# ||statusapi.micloud.xiaomi.net^
+# ||cn.app.chat.xiaomi.net^
+# ||app.chat.xiaomi.net^
+# ||api.chat.xiaomi.net^
+
+! ==============================================================================
+!  第 9 组：共用域名 / 运营商域名 —— 默认关闭
+!  【修正】原写法 "!!||domain^"，按原说明「去掉行首的 !」只会得到 "!||domain^"，
+!    在 AdGuard 中 ! 开头仍是注释，规则永远不会生效。现统一改为 "! ||domain^"，
+!    删掉行首 "! "（含空格）即可启用。
+! ==============================================================================
+!
+!  SystemHelper 上报应用列表 + 使用统计 + 流量 + IMEI/IMSI/ICCID
+!  到联通接口 dm.wo.com.cn:18080/register（非标端口）。
+!  该主机名与联通自有业务共用，DNS 层封域名会影响运营商服务；
+!  建议改用单应用出网管控，只禁 com.mobiletools.systemhelper。
+! ||dm.wo.com.cn^
+!
+!  【修正归属】sandai.net 是迅雷（深圳市迅雷网络技术有限公司）备案域名，
+!  用于下载加速/P2SP 与 ETL 数据上报，并非安天 AVL 云查杀端点，故从第 3 组移入本组。
+!  ⚠ 屏蔽可能影响小米浏览器/下载器的 APK 下载加速
+! ||etl-xlmc-ssl.sandai.net^
+! ||ssl-cdn.static.browser.mi-img.com^
+! ||sec-cdn.static.xiaomi.net^
+!
+!  小米金融/钱包接口，同时承担埋点
+! ||api.jr.mi.com^
+
+! ==============================================================================
+!  第 10 组（新增，默认关闭）：HTTPDNS / DoH 绕过防护
+!  为什么需要：只要 App 用内置 HTTPDNS 或 DoH 解析目标域名，系统 DNS 就收不到查询，
+!    前面 9 组全部形同虚设。这是 DNS 层方案最大的盲区。
+!  ⚠ 副作用很大：封通用 HTTPDNS 会让大量 App 等待超时回落系统 DNS，启动明显变慢。
+!    优先方案是在网关强制重定向 53/853 + 关闭手机「私人 DNS」，
+!    或直接用按应用防火墙禁网，而不是全局封这些域名。
+!  删掉行首 "! "（含空格）启用。
+! ==============================================================================
+! ||dns.alidns.com^
+! ||httpdns.alicdn.com^
+! ||amdc.alipay.com^
+! ||dns.qq.com^
+! ||httpdns.pro^
+! ||httpdns.kg.qq.com^
+! ||httpsdns.baidu.com^
+! ||dns.weixin.qq.com^
+! ||httpdns.volcengineapi.com^
+! ||httpdns.meituan.com^
+! ||httpdns.bcelive.com^
+! ||dns.google^
+! ||cloudflare-dns.com^
+! ||doh.pub^
+
+! ==============================================================================
+!  仍需注意的覆盖盲区
+!   * 硬编码 IP / 非标端口直连：DNS 无能为力，必须靠 iptables 或按应用防火墙
+!   * 本清单仅覆盖小米系，不含 OPPO/vivo/华为 的云控与自有 HTTPDNS
+!   * 组件有本地缓存、重试与自恢复；系统 OTA 可能恢复被禁用组件
+!   * 缺 @@ 例外规则：误伤时只能整条删。建议配套维护一份白名单
+!  验证：AdGuard Home 查询日志 / RethinkDNS 连接日志 / PCAPdroid 抓包
+! ==============================================================================
